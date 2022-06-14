@@ -1,3 +1,4 @@
+import 'package:envapp/share/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
@@ -19,14 +20,7 @@ class CustomButton extends StatelessWidget {
         height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          gradient: const LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.topLeft,
-            colors: [
-              Color(0xFF7E78EE),
-              Color.fromARGB(255, 197, 195, 235),
-            ],
-          ),
+          gradient: AppColors.primaryColor,
         ),
         child: Center(
           child: Text(

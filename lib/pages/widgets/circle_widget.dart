@@ -1,3 +1,4 @@
+import 'package:envapp/share/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'circle_propress.dart';
 import 'custom_button.dart';
@@ -49,7 +50,8 @@ class _ContainerWidgetState extends State<CircleWidget>
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: Image.asset("assets/outline.png").image, scale: 1.4),
+                    image: Image.asset(AppIcons.circleOutline).image,
+                    scale: 1.4),
               ),
               child: CustomPaint(
                 foregroundPainter: CircleProgress(_animation.value),

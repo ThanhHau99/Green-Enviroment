@@ -1,0 +1,32 @@
+[
+    {
+        "id" : "ST001",
+        "name" : "Station 1",
+        "isActive": true,
+        "dataStation": {
+            "temp": 28.0,
+            "dust": 35.2,
+            "humi": 60.0
+        }
+        
+    },
+    {
+        "id" : "ST002",
+        "name" : "Station 2",
+        "isActive": true,
+        "dataStation": {
+            "waterLevel": 28.0,
+            "pH": 10.0
+        }
+    },
+    {
+        "id" : "ST003",
+        "name" : "Station 3",
+        "isActive": true,
+        "dataStation": {
+            "temp": 28.0,
+            "dust": 35.2,
+            "humi": 60.0
+        }
+    }
+]

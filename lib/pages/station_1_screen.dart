@@ -1,18 +1,30 @@
+import 'package:envapp/share/app_icons.dart';
 import 'package:flutter/material.dart';
+import '../model/station_1_model.dart';
+import '../share/app_colors.dart';
 import 'widgets/circle_widget.dart';
 import 'widgets/header_widget.dart';
 
 class Station1Screen extends StatefulWidget {
-  const Station1Screen({Key? key}) : super(key: key);
+  final dynamic dataStation;
+  const Station1Screen({Key? key, this.dataStation}) : super(key: key);
 
   @override
   State<Station1Screen> createState() => _Station1ScreenState();
 }
 
 class _Station1ScreenState extends State<Station1Screen> {
+  late final dynamic jData;
   int indexTab = 0;
   @override
+  void initState() {
+    super.initState();
+    jData = Station1Model.fromJson(widget.dataStation);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print("dataStation: ${jData.humi}");
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -33,19 +45,12 @@ class _Station1ScreenState extends State<Station1Screen> {
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          color: const Color(0xFFF0F0F0),
+                          color: AppColors.secondColor,
                         ),
                         child: TabBar(
                           indicator: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            gradient: const LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.topLeft,
-                              colors: [
-                                Color(0xFF7E78EE),
-                                Color.fromARGB(255, 197, 195, 235),
-                              ],
-                            ),
+                            gradient: AppColors.primaryColor,
                           ),
                           unselectedLabelColor: Colors.black,
                           onTap: (int index) {
@@ -57,11 +62,11 @@ class _Station1ScreenState extends State<Station1Screen> {
                             Tab(
                               icon: indexTab == 0
                                   ? Image.asset(
-                                      "assets/temp_white.png",
+                                      AppIcons.tempWhite,
                                       scale: 2,
                                     )
                                   : Image.asset(
-                                      "assets/temp_black.png",
+                                      AppIcons.tempBlack,
                                       scale: 2,
                                     ),
                               text: "Temperature",
@@ -70,11 +75,11 @@ class _Station1ScreenState extends State<Station1Screen> {
                             Tab(
                               icon: indexTab == 1
                                   ? Image.asset(
-                                      "assets/dust_white.png",
+                                      AppIcons.dustWhite,
                                       scale: 1.5,
                                     )
                                   : Image.asset(
-                                      "assets/dust_black.png",
+                                      AppIcons.dustBlack,
                                       scale: 1.5,
                                     ),
                               text: "Dust",
@@ -82,11 +87,11 @@ class _Station1ScreenState extends State<Station1Screen> {
                             Tab(
                               icon: indexTab == 2
                                   ? Image.asset(
-                                      "assets/humi_white.png",
+                                      AppIcons.humiWhite,
                                       scale: 1.5,
                                     )
                                   : Image.asset(
-                                      "assets/humi_black.png",
+                                      AppIcons.humiBlack,
                                       scale: 1.5,
                                     ),
                               text: "Humidity",
@@ -97,21 +102,21 @@ class _Station1ScreenState extends State<Station1Screen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Expanded(
+                      Expanded(
                         child: TabBarView(
                           children: [
                             CircleWidget(
-                              valueProgress: 30,
+                              valueProgress: jData.temp,
                               valueUnit: "°C",
                               lableButton: "Set Temperature alert",
                             ),
                             CircleWidget(
-                              valueProgress: 35,
+                              valueProgress: jData.dust,
                               valueUnit: "mcg/m3",
                               lableButton: "Set Dust alert",
                             ),
                             CircleWidget(
-                              valueProgress: 40,
+                              valueProgress: jData.humi,
                               valueUnit: "%",
                               lableButton: "Set Humidity alert",
                             ),

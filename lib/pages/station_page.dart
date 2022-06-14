@@ -1,5 +1,9 @@
+import 'package:envapp/data/station_data.dart';
+import 'package:envapp/share/app_colors.dart';
+import 'package:envapp/share/app_icons.dart';
 import 'package:flutter/material.dart';
 
+import '../model/station_model.dart';
 import 'station_1_screen.dart';
 import 'station_2_screen.dart';
 import 'station_3_screen.dart';
@@ -12,6 +16,7 @@ class StationPage extends StatefulWidget {
 }
 
 class _StationPageState extends State<StationPage> {
+  final stationData = StationData();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,38 +39,66 @@ class _StationPageState extends State<StationPage> {
                       height: 20,
                     ),
                     Expanded(
-                      child: GridView.builder(
-                        itemCount: 3,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                        ),
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    if (index == 0) {
-                                      return const Station1Screen();
-                                    } else if (index == 1) {
-                                      return const Station2Screen();
-                                    } else {
-                                      return const Station3Screen();
-                                    }
-                                  },
+                      child: FutureBuilder<List<StationModel>>(
+                          future: stationData.load(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: AppColors.lightPurple,
                                 ),
                               );
-                            },
-                            child: CustomContainer(
-                              title: "Station ${index + 1}",
-                            ),
-                          );
-                        },
-                      ),
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                child: Text(
+                                  snapshot.hasError.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              );
+                            }
+                            final station = snapshot.data;
+                            return GridView.builder(
+                              itemCount: station!.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                              ),
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          if (station[index].id == "ST001") {
+                                            return Station1Screen(
+                                              dataStation:
+                                                  station[index].dataStation,
+                                            );
+                                          } else if (station[index].id ==
+                                              "ST002") {
+                                            return Station2Screen(
+                                              dataStation:
+                                                  station[index].dataStation,
+                                            );
+                                          } else {
+                                            return const Station3Screen();
+                                          }
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: CustomContainer(
+                                    title: station[index].name,
+                                  ),
+                                );
+                              },
+                            );
+                          }),
                     ),
                   ],
                 ),
@@ -91,20 +124,13 @@ class CustomContainer extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.topLeft,
-          colors: [
-            Color(0xFF7E78EE),
-            Color.fromARGB(255, 197, 195, 235),
-          ],
-        ),
+        gradient: AppColors.primaryColor,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Image.asset(
-            "assets/station_white.png",
+            AppIcons.stationWhite,
           ),
           Text(
             title!,

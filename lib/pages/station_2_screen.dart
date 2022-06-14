@@ -1,18 +1,32 @@
+import 'package:envapp/share/app_icons.dart';
 import 'package:flutter/material.dart';
 
+import '../model/station_2_model.dart';
+import '../share/app_colors.dart';
 import 'widgets/header_widget.dart';
+import 'widgets/progress_bar.dart';
+import 'widgets/wave_widget.dart';
 
 class Station2Screen extends StatefulWidget {
-  const Station2Screen({Key? key}) : super(key: key);
+  final dynamic dataStation;
+  const Station2Screen({Key? key, this.dataStation}) : super(key: key);
 
   @override
   State<Station2Screen> createState() => _Station2ScreenState();
 }
 
 class _Station2ScreenState extends State<Station2Screen> {
+  late final dynamic jData;
   int indexTab = 0;
   @override
+  void initState() {
+    super.initState();
+    jData = Station2Model.fromJson(widget.dataStation);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print("object: ${jData.pH}");
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -38,14 +52,7 @@ class _Station2ScreenState extends State<Station2Screen> {
                         child: TabBar(
                           indicator: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            gradient: const LinearGradient(
-                              begin: Alignment.topRight,
-                              end: Alignment.topLeft,
-                              colors: [
-                                Color(0xFF7E78EE),
-                                Color.fromARGB(255, 197, 195, 235),
-                              ],
-                            ),
+                            gradient: AppColors.primaryColor,
                           ),
                           unselectedLabelColor: Colors.black,
                           onTap: (int index) {
@@ -57,11 +64,11 @@ class _Station2ScreenState extends State<Station2Screen> {
                             Tab(
                               icon: indexTab == 0
                                   ? Image.asset(
-                                      "assets/water_level_white.png",
+                                      AppIcons.waterLevelWhite,
                                       scale: 1.5,
                                     )
                                   : Image.asset(
-                                      "assets/water_level_black.png",
+                                      AppIcons.waterLevelBlack,
                                       scale: 1.5,
                                     ),
                               iconMargin:
@@ -72,14 +79,14 @@ class _Station2ScreenState extends State<Station2Screen> {
                             Tab(
                               icon: indexTab == 1
                                   ? Image.asset(
-                                      "assets/humi_white.png",
+                                      AppIcons.pHWhite,
                                       scale: 1.5,
                                     )
                                   : Image.asset(
-                                      "assets/humi_black.png",
+                                      AppIcons.pHBlack,
                                       scale: 1.5,
                                     ),
-                              text: "Humidity",
+                              text: "pH",
                             ),
                           ],
                         ),
@@ -87,11 +94,15 @@ class _Station2ScreenState extends State<Station2Screen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Expanded(
+                      Expanded(
                         child: TabBarView(
                           children: [
-                            Text("data01"),
-                            Text("data02"),
+                            WaveWidget(
+                              value: jData.waterLevel,
+                            ),
+                            ProgressBar(
+                              value: jData.pH,
+                            ),
                           ],
                         ),
                       ),
