@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:envapp/model/station_model.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
 
 abstract class RealtimeData {
@@ -10,10 +12,17 @@ abstract class RealtimeData {
 class StationData extends RealtimeData {
   @override
   Future<List<StationModel>> load() async {
-    await Future.delayed(const Duration(seconds: 5));
-    final jsonContent = await rootBundle.loadString("mock/dataFB.json");
-    final List<dynamic> jsonData = jsonDecode(jsonContent);
-    print("object: $jsonData");
-    return jsonData.map((e) => StationModel.fromJson(e)).toList();
+    final List<StationModel> stations = [];
+    DatabaseReference ref = FirebaseDatabase.instance.ref();
+    // Get the data once
+    await ref.once().then((event) {
+      for (var element in event.snapshot.children) {
+        print("value: ${element.value}");
+        var data = element.value as Map<dynamic, dynamic>;
+        StationModel station = StationModel.fromJson(data);
+        stations.add(station);
+      }
+    });
+    return stations;
   }
 }

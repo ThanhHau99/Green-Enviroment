@@ -1,21 +1,19 @@
 import 'package:envapp/data/station_data.dart';
+import 'package:envapp/pages/station_screen.dart';
 import 'package:envapp/share/app_colors.dart';
 import 'package:envapp/share/app_icons.dart';
 import 'package:flutter/material.dart';
-
 import '../model/station_model.dart';
-import 'station_1_screen.dart';
-import 'station_2_screen.dart';
-import 'station_3_screen.dart';
+import 'widgets/alert_dialog_widget.dart';
 
-class StationPage extends StatefulWidget {
-  const StationPage({Key? key}) : super(key: key);
+class AllStationPage extends StatefulWidget {
+  const AllStationPage({Key? key}) : super(key: key);
 
   @override
-  State<StationPage> createState() => _StationPageState();
+  State<AllStationPage> createState() => _AllStationPageState();
 }
 
-class _StationPageState extends State<StationPage> {
+class _AllStationPageState extends State<AllStationPage> {
   final stationData = StationData();
   @override
   Widget build(BuildContext context) {
@@ -70,30 +68,31 @@ class _StationPageState extends State<StationPage> {
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          if (station[index].id == "ST001") {
-                                            return Station1Screen(
-                                              dataStation:
-                                                  station[index].dataStation,
-                                            );
-                                          } else if (station[index].id ==
-                                              "ST002") {
-                                            return Station2Screen(
-                                              dataStation:
-                                                  station[index].dataStation,
-                                            );
-                                          } else {
-                                            return const Station3Screen();
-                                          }
-                                        },
-                                      ),
-                                    );
+                                    if (station[index].isActive!) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => StationScreen(
+                                            dataStation:
+                                                station[index].dataStation,
+                                            stationName: station[index].name,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      showDialog<String>(
+                                        barrierDismissible: false,
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialogWidget(
+                                          stationName: station[index].name,
+                                        ),
+                                      );
+                                    }
                                   },
                                   child: CustomContainer(
                                     title: station[index].name,
+                                    isActive: station[index].isActive,
                                   ),
                                 );
                               },
@@ -113,9 +112,11 @@ class _StationPageState extends State<StationPage> {
 
 class CustomContainer extends StatelessWidget {
   final String? title;
+  final bool? isActive;
   const CustomContainer({
     Key? key,
     this.title,
+    this.isActive,
   }) : super(key: key);
 
   @override
@@ -124,19 +125,20 @@ class CustomContainer extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        gradient: AppColors.primaryColor,
+        gradient:
+            isActive! ? AppColors.primaryColor : AppColors.secondColorGradient,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Image.asset(
-            AppIcons.stationWhite,
+            isActive! ? AppIcons.stationWhite : AppIcons.stationpurple,
           ),
           Text(
             title!,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
-              color: Colors.white,
+              color: isActive! ? Colors.white : Colors.black,
             ),
           ),
         ],

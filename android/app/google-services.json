@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "863596418482",
+    "firebase_url": "https://testesp32-ca4cf-default-rtdb.firebaseio.com",
+    "project_id": "testesp32-ca4cf",
+    "storage_bucket": "testesp32-ca4cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863596418482:android:52cc0fe080acdc46eb40ab",
+        "android_client_info": {
+          "package_name": "com.example.envapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "863596418482-k3sf8gt7a3hroq9kb7p8nq9vn6053qch.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6SrS8xpy8Pa7SEAwZyEuEZsljqk_UFBs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "863596418482-k3sf8gt7a3hroq9kb7p8nq9vn6053qch.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

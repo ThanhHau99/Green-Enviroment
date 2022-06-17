@@ -4,7 +4,7 @@ class Station2Model {
 
   Station2Model({this.waterLevel, this.pH});
 
-  Station2Model.fromJson(Map<String, dynamic> json) {
+  Station2Model.fromJson(Map<dynamic, dynamic> json) {
     waterLevel = json['waterLevel'];
     pH = json['pH'];
   }

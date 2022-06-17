@@ -5,7 +5,7 @@ class Station1Model {
 
   Station1Model({this.temp, this.humi});
 
-  Station1Model.fromJson(Map<String, dynamic> json) {
+  Station1Model.fromJson(Map<dynamic, dynamic> json) {
     temp = json['temp'];
     dust = json['dust'];
     humi = json['humi'];

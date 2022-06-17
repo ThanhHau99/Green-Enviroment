@@ -6,7 +6,7 @@ class StationModel {
 
   StationModel({this.id, this.name, this.isActive, this.dataStation});
 
-  StationModel.fromJson(Map<String, dynamic> json) {
+  StationModel.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
     name = json['name'];
     isActive = json['isActive'];

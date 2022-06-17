@@ -36,6 +36,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_animation_progress_bar: ^2.2.1
   wave_progress_widget: ^0.0.1
+  firebase_core: ^1.18.0
+  firebase_database: ^9.0.16
 
 dev_dependencies:
   flutter_test:
