@@ -1,5 +1,7 @@
+import 'package:envapp/share/app_colors.dart';
 import 'package:envapp/share/app_icons.dart';
 import 'package:flutter/material.dart';
+import 'bottom_sheet_widget.dart';
 import 'circle_propress.dart';
 import 'custom_button.dart';
 
@@ -69,7 +71,17 @@ class _ContainerWidgetState extends State<CircleWidget>
         CustomButton(
           lable: widget.lableButton,
           onTap: () {
-            print("data: ${widget.valueProgress}");
+            showBottomSheet(
+                enableDrag: false,
+                context: context,
+                builder: (BuildContext context) {
+                  return BottomSheetWidget(
+                    title: widget.lableButton,
+                    onTap: () {
+                      print("object");
+                    },
+                  );
+                });
           },
         ),
       ],
