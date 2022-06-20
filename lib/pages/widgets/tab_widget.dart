@@ -22,19 +22,22 @@ class TabWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Tab(
-      icon: indexTab == index
-          ? Image.asset(
-              iconWhite!,
-              scale: scale,
-            )
-          : Image.asset(
-              iconBlack!,
-              scale: scale,
-            ),
-      text: text,
-      height: 100,
-      iconMargin: iconMargin ?? const EdgeInsets.only(bottom: 10.0),
+    return SizedBox(
+      width: 90,
+      child: Tab(
+        icon: indexTab == index
+            ? Image.asset(
+                iconWhite!,
+                scale: scale,
+              )
+            : Image.asset(
+                iconBlack!,
+                scale: scale,
+              ),
+        text: text,
+        height: 100,
+        iconMargin: iconMargin ?? const EdgeInsets.only(bottom: 10.0),
+      ),
     );
   }
 }

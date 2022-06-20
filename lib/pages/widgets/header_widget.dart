@@ -1,3 +1,4 @@
+import 'package:envapp/share/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class HeaderWidget extends StatelessWidget {
@@ -22,6 +23,7 @@ class HeaderWidget extends StatelessWidget {
           title!,
           style: const TextStyle(
             fontSize: 20,
+            fontWeight: FontWeight.w700,
           ),
         ),
         Opacity(

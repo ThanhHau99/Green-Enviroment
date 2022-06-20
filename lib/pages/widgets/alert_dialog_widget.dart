@@ -1,36 +1,81 @@
+import 'package:envapp/pages/widgets/custom_button.dart';
 import 'package:envapp/share/app_colors.dart';
+import 'package:envapp/share/app_icons.dart';
 import 'package:flutter/material.dart';
 
 class AlertDialogWidget extends StatelessWidget {
   const AlertDialogWidget({
     Key? key,
-    this.stationName,
+    this.title,
+    this.text,
+    this.enableIcon,
   }) : super(key: key);
 
-  final String? stationName;
+  final String? title;
+  final String? text;
+  final bool? enableIcon;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: AppColors.secondColor,
-      contentPadding: const EdgeInsets.fromLTRB(24.0, 15.0, 24.0, 5.0),
-      title: const Text(
-        "Notification",
-        style: TextStyle(fontSize: 22),
-      ),
-      content: Text(
-        "$stationName isn't active",
-        style: const TextStyle(fontSize: 20),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(
-            "OK",
-            style: TextStyle(fontSize: 20, color: AppColors.purple),
-          ),
+      contentPadding: const EdgeInsets.all(0),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20))),
+      content: Container(
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          gradient: AppColors.primaryColor,
         ),
-      ],
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                enableIcon!
+                    ? Icon(
+                        Icons.check_circle_outline,
+                        color: AppColors.whiteText,
+                        size: 28,
+                      )
+                    : Image.asset(
+                        AppIcons.exclamation,
+                        scale: 5,
+                      ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  title!,
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.whiteText,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              text!,
+              style: const TextStyle(fontSize: 23, color: Colors.white),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            CustomButton(
+                lable: "OK",
+                lableColor: AppColors.lightGreen,
+                gradient: AppColors.whiteGradient,
+                onTap: () {
+                  Navigator.pop(context);
+                }),
+          ],
+        ),
+      ),
     );
   }
 }

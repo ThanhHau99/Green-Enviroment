@@ -1,18 +1,28 @@
+import 'package:envapp/share/app_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
+import '../../data/station_data.dart';
 import '../../share/app_colors.dart';
+import 'alert_dialog_widget.dart';
 import 'custom_button.dart';
 
 class BottomSheetWidget extends StatelessWidget {
-  const BottomSheetWidget({
+  BottomSheetWidget({
     Key? key,
     this.title,
-    required this.onTap,
+    this.warningValue,
+    this.stationName,
+    this.warningName,
   }) : super(key: key);
 
   final String? title;
-  final Function() onTap;
+  final double? warningValue;
+  final String? stationName;
+  final String? warningName;
 
+  final TextEditingController _controller = TextEditingController();
+  final stationData = StationData();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,71 +31,98 @@ class BottomSheetWidget extends StatelessWidget {
           topLeft: Radius.circular(25),
           topRight: Radius.circular(25),
         ),
-        color: AppColors.secondColor,
+        gradient: AppColors.primaryColor,
       ),
-      height: MediaQuery.of(context).size.height * 0.3,
       width: double.infinity,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.all(15),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Opacity(
-                  opacity: 0,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.close),
-                    iconSize: 30,
-                  ),
+            Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Image.asset(
+                  AppIcons.close,
+                  scale: 2.5,
                 ),
-                Text(
-                  title!,
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: AppColors.purple,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.close),
-                  iconSize: 30,
-                ),
-              ],
+              ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Enter value",
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(20)),
-                    borderSide: BorderSide(color: AppColors.purple),
-                  ),
-                ),
-                cursorColor: AppColors.purple,
-                keyboardType: TextInputType.number,
+            Text(
+              title!,
+              style: TextStyle(
+                fontSize: 28,
+                color: AppColors.whiteText,
+                fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(
               height: 20,
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    border: Border.all(color: AppColors.whiteText, width: 2),
+                    borderRadius: const BorderRadius.all(Radius.circular(20))),
+                child: TextField(
+                  controller: _controller,
+                  decoration: InputDecoration(
+                    hintText: "Current value: $warningValue",
+                    hintStyle: TextStyle(
+                      color: AppColors.hintText,
+                    ),
+                    filled: true,
+                    fillColor: AppColors.whiteText,
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20),
+                      ),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  cursorColor: AppColors.lightGreen,
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
             CustomButton(
               lable: "Save",
-              onTap: onTap,
+              lableColor: AppColors.lightGreen,
+              gradient: AppColors.whiteGradient,
+              onTap: () {
+                Navigator.pop(context);
+                updateValue(context);
+              },
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void updateValue(BuildContext context) async {
+    bool result = await InternetConnectionChecker().hasConnection;
+    if (result) {
+      double value = double.parse(_controller.value.text).toDouble();
+      stationData.updateWarningValue(stationName!, warningName!, value);
+    }
+    showDialog<String>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) => AlertDialogWidget(
+        title: result ? "Completion" : "Alert",
+        text: result
+            ? "Warning value update successful"
+            : "Warning value update unsuccessful",
+        enableIcon: result,
       ),
     );
   }

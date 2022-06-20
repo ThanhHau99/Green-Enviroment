@@ -1,3 +1,4 @@
+import 'package:envapp/share/app_colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'EnvApp',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        fontFamily: 'Agency',
         primarySwatch: Colors.blue,
       ),
       home: const AllStationPage(),

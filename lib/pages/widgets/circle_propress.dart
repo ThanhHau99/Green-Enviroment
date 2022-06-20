@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:envapp/share/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,7 @@ class CircleProgress extends CustomPainter {
     // draw circle
     Paint circle = Paint()
       ..strokeWidth = strokeCircle
-      ..color = Colors.grey
+      ..color = AppColors.secondColor
       ..style = PaintingStyle.stroke;
 
     Offset center = Offset(size.width / 2, size.height / 2);
@@ -22,7 +23,7 @@ class CircleProgress extends CustomPainter {
     // draw animation
     Paint animationArc = Paint()
       ..strokeWidth = strokeCircle
-      ..color = const Color(0xFF7E78EE)
+      ..color = AppColors.lightGreen
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
@@ -38,7 +39,7 @@ class CircleProgress extends CustomPainter {
     // background
     Paint backgroundStroke = Paint()
       ..strokeWidth = 2
-      ..color = Color(0xFF7E78EE)
+      ..color = AppColors.lightGreen
       ..style = PaintingStyle.stroke;
 
     canvas.drawCircle(center, 100, backgroundStroke);

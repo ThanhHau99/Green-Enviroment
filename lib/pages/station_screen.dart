@@ -1,5 +1,6 @@
 import 'package:envapp/pages/widgets/tab_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../share/app_colors.dart';
 import '../share/app_icons.dart';
 import 'widgets/circle_widget.dart';
@@ -9,8 +10,10 @@ import 'widgets/wave_widget.dart';
 
 class StationScreen extends StatefulWidget {
   final dynamic dataStation;
+  final dynamic warning;
   final String? stationName;
-  const StationScreen({Key? key, this.dataStation, this.stationName})
+  const StationScreen(
+      {Key? key, this.dataStation, this.stationName, this.warning})
       : super(key: key);
 
   @override
@@ -19,17 +22,44 @@ class StationScreen extends StatefulWidget {
 
 class _StationScreenState extends State<StationScreen> {
   Map<dynamic, dynamic>? dataStation;
+  Map<dynamic, dynamic>? warning;
   int indexTab = 0;
   List<Widget> tabWidgets = [];
   List<Widget> tabBarViewWidgets = [];
+  String? dateTime;
+  double? tempWarning = 0;
+  double? humiWarning = 0;
+  double? dustWarning = 0;
+  double? waterLevelWarning = 0;
+  double? pHWarning = 0;
   @override
   void initState() {
     super.initState();
-    dataStation = widget.dataStation as Map<dynamic, dynamic>;
+    dateTime = DateFormat("dd/MM/yyyy").format(DateTime.now());
 
+    warning = widget.warning as Map<dynamic, dynamic>;
+    warning!.forEach((key, value) {
+      warningValue(key, value);
+    });
+
+    dataStation = widget.dataStation as Map<dynamic, dynamic>;
     dataStation!.forEach((key, value) {
       addWidget(key, value);
     });
+  }
+
+  void warningValue(dynamic key, dynamic value) {
+    if (key == "tempWarning") {
+      tempWarning = value;
+    } else if (key == "humiWarning") {
+      humiWarning = value;
+    } else if (key == "dustWarning") {
+      dustWarning = value;
+    } else if (key == "waterLevelWarning") {
+      waterLevelWarning = value;
+    } else if (key == "pHWarning") {
+      pHWarning = value;
+    }
   }
 
   void addWidget(dynamic key, dynamic value) {
@@ -42,9 +72,12 @@ class _StationScreenState extends State<StationScreen> {
         scale: 2,
       ));
       tabBarViewWidgets.add(CircleWidget(
-        valueProgress: value,
-        valueUnit: "°C",
+        value: value,
+        unit: "°C",
+        warningValue: tempWarning,
         lableButton: "Set Temperature alert",
+        stationName: widget.stationName,
+        warningName: "tempWarning",
       ));
     } else if (key == "humi") {
       tabWidgets.add(TabWidget(
@@ -55,9 +88,12 @@ class _StationScreenState extends State<StationScreen> {
         scale: 1.5,
       ));
       tabBarViewWidgets.add(CircleWidget(
-        valueProgress: value,
-        valueUnit: "%",
+        value: value,
+        unit: "%",
+        warningValue: humiWarning,
         lableButton: "Set Humidity alert",
+        stationName: widget.stationName,
+        warningName: "humiWarning",
       ));
     } else if (key == "dust") {
       tabWidgets.add(TabWidget(
@@ -68,9 +104,12 @@ class _StationScreenState extends State<StationScreen> {
         scale: 1.5,
       ));
       tabBarViewWidgets.add(CircleWidget(
-        valueProgress: value,
-        valueUnit: "mcg/m3",
+        value: value,
+        unit: "mcg/m3",
+        warningValue: dustWarning,
         lableButton: "Set Dust alert",
+        stationName: widget.stationName,
+        warningName: "dustWarning",
       ));
     } else if (key == "waterLevel") {
       tabWidgets.add(TabWidget(
@@ -83,6 +122,9 @@ class _StationScreenState extends State<StationScreen> {
       ));
       tabBarViewWidgets.add(WaveWidget(
         value: value,
+        warningValue: waterLevelWarning,
+        stationName: widget.stationName,
+        warningName: "waterLevelWarning",
       ));
     } else if (key == "pH") {
       tabWidgets.add(TabWidget(
@@ -94,6 +136,9 @@ class _StationScreenState extends State<StationScreen> {
       ));
       tabBarViewWidgets.add(ProgressBar(
         value: value,
+        warningValue: pHWarning,
+        stationName: widget.stationName,
+        warningName: "pHWarning",
       ));
     }
   }
@@ -101,6 +146,7 @@ class _StationScreenState extends State<StationScreen> {
   @override
   Widget build(BuildContext context) {
     print("Data station: ${widget.dataStation}");
+    print("Warning: ${widget.warning}");
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -124,11 +170,12 @@ class _StationScreenState extends State<StationScreen> {
                           color: AppColors.secondColor,
                         ),
                         child: TabBar(
+                          isScrollable: true,
                           indicator: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             gradient: AppColors.primaryColor,
                           ),
-                          unselectedLabelColor: Colors.black,
+                          unselectedLabelColor: AppColors.blackText,
                           onTap: (int index) {
                             setState(() {});
                           },
@@ -137,6 +184,19 @@ class _StationScreenState extends State<StationScreen> {
                       ),
                       const SizedBox(
                         height: 20,
+                      ),
+                      Text(
+                        "Today",
+                        style:
+                            TextStyle(fontSize: 18, color: AppColors.blackText),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        dateTime.toString(),
+                        style:
+                            TextStyle(fontSize: 18, color: AppColors.blackText),
                       ),
                       Expanded(
                         child: TabBarView(

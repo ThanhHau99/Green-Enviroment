@@ -1,15 +1,18 @@
-import 'package:envapp/share/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton({
     Key? key,
-    required this.lable,
-    required this.onTap,
+    this.lable,
+    this.lableColor,
+    this.onTap,
+    this.gradient,
   }) : super(key: key);
 
   final String? lable;
-  final Function() onTap;
+  final Color? lableColor;
+  final Function()? onTap;
+  final Gradient? gradient;
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +23,17 @@ class CustomButton extends StatelessWidget {
         height: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          gradient: AppColors.primaryColor,
+          gradient: gradient,
         ),
         child: Center(
           child: Text(
             lable!,
-            style: const TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+              fontSize: 20,
+              color: lableColor,
+              fontWeight: FontWeight.w700,
+              fontStyle: FontStyle.italic,
+            ),
           ),
         ),
       ),

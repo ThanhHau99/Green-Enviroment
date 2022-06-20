@@ -6,15 +6,21 @@ import 'circle_propress.dart';
 import 'custom_button.dart';
 
 class CircleWidget extends StatefulWidget {
-  final double? valueProgress;
-  final String? valueUnit;
+  final double? value;
+  final double? warningValue;
+  final String? unit;
   final String? lableButton;
+  final String? stationName;
+  final String? warningName;
 
   const CircleWidget({
     Key? key,
-    this.valueProgress,
-    this.valueUnit,
+    this.value,
+    this.warningValue,
+    this.unit,
     this.lableButton,
+    this.stationName,
+    this.warningName,
   }) : super(key: key);
 
   @override
@@ -31,11 +37,11 @@ class _ContainerWidgetState extends State<CircleWidget>
     super.initState();
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 2000));
-    _animation = Tween<double>(begin: 0, end: widget.valueProgress)
-        .animate(_animationController)
-      ..addListener(() {
-        setState(() {});
-      });
+    _animation =
+        Tween<double>(begin: 0, end: widget.value).animate(_animationController)
+          ..addListener(() {
+            setState(() {});
+          });
     _animationController.forward();
   }
 
@@ -43,10 +49,6 @@ class _ContainerWidgetState extends State<CircleWidget>
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text(
-          "Today",
-          style: TextStyle(fontSize: 18),
-        ),
         Expanded(
           child: Center(
             child: Container(
@@ -59,7 +61,7 @@ class _ContainerWidgetState extends State<CircleWidget>
                 foregroundPainter: CircleProgress(_animation.value),
                 child: Center(
                     child: Text(
-                  "${_animation.value.toInt()} ${widget.valueUnit}",
+                  "${_animation.value.toInt()} ${widget.unit}",
                   style: const TextStyle(
                     fontSize: 25,
                   ),
@@ -70,18 +72,21 @@ class _ContainerWidgetState extends State<CircleWidget>
         ),
         CustomButton(
           lable: widget.lableButton,
+          lableColor: AppColors.whiteText,
+          gradient: AppColors.primaryColor,
           onTap: () {
             showBottomSheet(
-                enableDrag: false,
-                context: context,
-                builder: (BuildContext context) {
-                  return BottomSheetWidget(
-                    title: widget.lableButton,
-                    onTap: () {
-                      print("object");
-                    },
-                  );
-                });
+              enableDrag: false,
+              context: context,
+              builder: (BuildContext context) {
+                return BottomSheetWidget(
+                  title: widget.lableButton,
+                  warningValue: widget.warningValue,
+                  stationName: widget.stationName,
+                  warningName: widget.warningName,
+                );
+              },
+            );
           },
         ),
       ],

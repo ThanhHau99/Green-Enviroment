@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 
 abstract class RealtimeData {
   Future<List<StationModel>> load();
+  Future<void> updateWarningValue(String stationName, String key, double value);
 }
 
 class StationData extends RealtimeData {
@@ -24,5 +25,15 @@ class StationData extends RealtimeData {
       }
     });
     return stations;
+  }
+
+  @override
+  Future<void> updateWarningValue(
+      String stationName, String key, double value) async {
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref("$stationName/warning");
+    await ref.update({
+      key: value,
+    });
   }
 }

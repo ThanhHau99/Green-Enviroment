@@ -27,10 +27,12 @@ class _AllStationPageState extends State<AllStationPage> {
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    const Text(
+                    Text(
                       "All Station",
                       style: TextStyle(
                         fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.blackText,
                       ),
                     ),
                     const SizedBox(
@@ -43,7 +45,7 @@ class _AllStationPageState extends State<AllStationPage> {
                             if (!snapshot.hasData) {
                               return Center(
                                 child: CircularProgressIndicator(
-                                  color: AppColors.lightPurple,
+                                  color: AppColors.lightGreen,
                                 ),
                               );
                             } else if (snapshot.hasError) {
@@ -75,6 +77,7 @@ class _AllStationPageState extends State<AllStationPage> {
                                           builder: (context) => StationScreen(
                                             dataStation:
                                                 station[index].dataStation,
+                                            warning: station[index].warning,
                                             stationName: station[index].name,
                                           ),
                                         ),
@@ -85,7 +88,10 @@ class _AllStationPageState extends State<AllStationPage> {
                                         context: context,
                                         builder: (BuildContext context) =>
                                             AlertDialogWidget(
-                                          stationName: station[index].name,
+                                          title: "Alert",
+                                          text:
+                                              "${station[index].name} isn't active",
+                                          enableIcon: false,
                                         ),
                                       );
                                     }
@@ -122,23 +128,36 @@ class CustomContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         gradient:
             isActive! ? AppColors.primaryColor : AppColors.secondColorGradient,
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Opacity(
+              opacity: isActive! ? 0 : 1,
+              child: Image.asset(
+                AppIcons.inactive,
+                scale: 3.5,
+              ),
+            ),
+          ),
           Image.asset(
             isActive! ? AppIcons.stationWhite : AppIcons.stationpurple,
+          ),
+          const SizedBox(
+            height: 15,
           ),
           Text(
             title!,
             style: TextStyle(
               fontSize: 18,
-              color: isActive! ? Colors.white : Colors.black,
+              fontWeight: FontWeight.w700,
+              color: isActive! ? AppColors.whiteText : AppColors.blackText,
             ),
           ),
         ],
