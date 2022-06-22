@@ -19,7 +19,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Agency',
-        primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          secondary: AppColors.lightGreen,
+        ),
       ),
       home: const AllStationPage(),
     );
