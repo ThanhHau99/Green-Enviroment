@@ -2,18 +2,20 @@ class StationModel {
   String? id;
   String? name;
   bool? isActive;
-  dynamic dataStation;
-  dynamic warning;
+  dynamic stationData;
 
-  StationModel(
-      {this.id, this.name, this.isActive, this.dataStation, this.warning});
+  StationModel({
+    this.id,
+    this.name,
+    this.isActive,
+    this.stationData,
+  });
 
   StationModel.fromJson(Map<dynamic, dynamic> json) {
     id = json['id'];
     name = json['name'];
     isActive = json['isActive'];
-    dataStation = json['dataStation'];
-    warning = json['warning'];
+    stationData = json['stationData'];
   }
 
   Map<String, dynamic> toJson() {
@@ -21,8 +23,8 @@ class StationModel {
     data['id'] = id;
     data['name'] = name;
     data['isActive'] = isActive;
-    data['dataStation'] = dataStation;
-    data['warning'] = warning;
+    data['stationData'] = stationData;
+
     return data;
   }
 }

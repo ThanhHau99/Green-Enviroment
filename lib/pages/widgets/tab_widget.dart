@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class TabWidget extends StatelessWidget {
   const TabWidget({
     Key? key,
-    this.indexTab,
+    this.enableTab,
     this.index,
     this.text,
     this.iconWhite,
@@ -12,7 +12,7 @@ class TabWidget extends StatelessWidget {
     this.iconMargin,
   }) : super(key: key);
 
-  final int? indexTab;
+  final bool? enableTab;
   final int? index;
   final String? iconWhite;
   final String? iconBlack;
@@ -25,7 +25,7 @@ class TabWidget extends StatelessWidget {
     return SizedBox(
       width: 90,
       child: Tab(
-        icon: indexTab == index
+        icon: enableTab!
             ? Image.asset(
                 iconWhite!,
                 scale: scale,

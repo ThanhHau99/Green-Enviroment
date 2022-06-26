@@ -1,6 +1,7 @@
 import 'package:envapp/pages/widgets/tab_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../data/station_data.dart';
 import '../share/app_colors.dart';
 import '../share/app_icons.dart';
 import 'widgets/circle_widget.dart';
@@ -9,21 +10,18 @@ import 'widgets/progress_bar.dart';
 import 'widgets/wave_widget.dart';
 
 class StationScreen extends StatefulWidget {
-  final dynamic dataStation;
-  final dynamic warning;
   final String? stationName;
-  const StationScreen(
-      {Key? key, this.dataStation, this.stationName, this.warning})
-      : super(key: key);
+  const StationScreen({Key? key, this.stationName}) : super(key: key);
 
   @override
   State<StationScreen> createState() => _StationScreenState();
 }
 
 class _StationScreenState extends State<StationScreen> {
-  Map<dynamic, dynamic>? dataStation;
+  final stationData = StationData();
+  Map<dynamic, dynamic>? sensorData;
   Map<dynamic, dynamic>? warning;
-  int indexTab = 0;
+  bool enableTab = false;
   List<Widget> tabWidgets = [];
   List<Widget> tabBarViewWidgets = [];
   String? dateTime;
@@ -37,15 +35,28 @@ class _StationScreenState extends State<StationScreen> {
     super.initState();
     dateTime = DateFormat("dd/MM/yyyy").format(DateTime.now());
 
-    warning = widget.warning as Map<dynamic, dynamic>;
-    warning!.forEach((key, value) {
-      warningValue(key, value);
-    });
+    loadData();
+  }
 
-    dataStation = widget.dataStation as Map<dynamic, dynamic>;
-    dataStation!.forEach((key, value) {
+  void loadData() async {
+    final data = stationData.loadStationData(widget.stationName.toString());
+
+    await data.then((value) {
+      value.forEach((key, value) {
+        if (key == "sensorData") {
+          sensorData = value as Map<dynamic, dynamic>;
+        } else if (key == "warning") {
+          warning = value as Map<dynamic, dynamic>;
+          warning!.forEach((key, value) {
+            warningValue(key, value);
+          });
+        }
+      });
+    });
+    sensorData!.forEach((key, value) {
       addWidget(key, value);
     });
+    setState(() {});
   }
 
   void warningValue(dynamic key, dynamic value) {
@@ -65,7 +76,7 @@ class _StationScreenState extends State<StationScreen> {
   void addWidget(dynamic key, dynamic value) {
     if (key == "temp") {
       tabWidgets.add(TabWidget(
-        indexTab: indexTab,
+        enableTab: enableTab,
         text: "Temperature",
         iconWhite: AppIcons.tempWhite,
         iconBlack: AppIcons.tempBlack,
@@ -81,7 +92,7 @@ class _StationScreenState extends State<StationScreen> {
       ));
     } else if (key == "humi") {
       tabWidgets.add(TabWidget(
-        indexTab: indexTab,
+        enableTab: enableTab,
         text: "Humidity",
         iconWhite: AppIcons.humiWhite,
         iconBlack: AppIcons.humiBlack,
@@ -97,7 +108,7 @@ class _StationScreenState extends State<StationScreen> {
       ));
     } else if (key == "dust") {
       tabWidgets.add(TabWidget(
-        indexTab: indexTab,
+        enableTab: enableTab,
         text: "Dust",
         iconWhite: AppIcons.dustWhite,
         iconBlack: AppIcons.dustBlack,
@@ -113,7 +124,7 @@ class _StationScreenState extends State<StationScreen> {
       ));
     } else if (key == "waterLevel") {
       tabWidgets.add(TabWidget(
-        indexTab: indexTab,
+        enableTab: enableTab,
         text: "WaterLevel",
         iconWhite: AppIcons.waterLevelWhite,
         iconBlack: AppIcons.waterLevelBlack,
@@ -128,7 +139,7 @@ class _StationScreenState extends State<StationScreen> {
       ));
     } else if (key == "pH") {
       tabWidgets.add(TabWidget(
-        indexTab: indexTab,
+        enableTab: enableTab,
         text: "pH",
         iconWhite: AppIcons.pHWhite,
         iconBlack: AppIcons.pHBlack,
@@ -143,73 +154,104 @@ class _StationScreenState extends State<StationScreen> {
     }
   }
 
+  Future<void> _onRefresh() async {
+    print("_onRefresh");
+    await Future.delayed(const Duration(milliseconds: 3000));
+    tabWidgets = [];
+    tabBarViewWidgets = [];
+
+    loadData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("Data station: ${widget.dataStation}");
-    print("Warning: ${widget.warning}");
+    //print("Data station: ${widget.dataStation}");
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            children: [
-              HeaderWidget(
-                title: widget.stationName,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Expanded(
-                child: DefaultTabController(
-                  length: tabWidgets.length,
-                  child: Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: AppColors.secondColor,
-                        ),
-                        child: TabBar(
-                          isScrollable: true,
-                          indicator: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            gradient: AppColors.primaryColor,
-                          ),
-                          unselectedLabelColor: AppColors.blackText,
-                          onTap: (int index) {
-                            setState(() {});
-                          },
-                          tabs: tabWidgets,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        "Today",
-                        style:
-                            TextStyle(fontSize: 18, color: AppColors.blackText),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        dateTime.toString(),
-                        style:
-                            TextStyle(fontSize: 18, color: AppColors.blackText),
-                      ),
-                      Expanded(
-                        child: TabBarView(
-                          children: tabBarViewWidgets,
-                        ),
-                      ),
-                    ],
-                  ),
+        child: RefreshIndicator(
+          color: AppColors.lightGreen,
+          onRefresh: _onRefresh,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height -
+                  MediaQuery.of(context).padding.top,
+              width: MediaQuery.of(context).size.width,
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    HeaderWidget(
+                      title: widget.stationName,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: tabWidgets.isEmpty
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.lightGreen,
+                              ),
+                            )
+                          : buildBody(),
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  DefaultTabController buildBody() {
+    return DefaultTabController(
+      length: tabWidgets.length,
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: AppColors.secondColor,
+            ),
+            child: TabBar(
+              isScrollable: true,
+              indicator: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                gradient: AppColors.primaryColor,
+              ),
+              unselectedLabelColor: AppColors.blackText,
+              // onTap: (int index) {
+              //   setState(() {
+              //     enableTab = true;
+              //   });
+              // },
+              tabs: tabWidgets,
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Text(
+            "Today",
+            style: TextStyle(fontSize: 18, color: AppColors.blackText),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Text(
+            dateTime.toString(),
+            style: TextStyle(fontSize: 18, color: AppColors.blackText),
+          ),
+          Expanded(
+            child: TabBarView(
+              physics: const NeverScrollableScrollPhysics(),
+              children: tabBarViewWidgets,
+            ),
+          ),
+        ],
       ),
     );
   }

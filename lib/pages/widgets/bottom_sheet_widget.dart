@@ -1,3 +1,4 @@
+import 'package:envapp/pages/station_screen.dart';
 import 'package:envapp/share/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -98,7 +99,7 @@ class BottomSheetWidget extends StatelessWidget {
               lableColor: AppColors.lightGreen,
               gradient: AppColors.whiteGradient,
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pop(context, 'text');
                 updateValue(context);
               },
             ),

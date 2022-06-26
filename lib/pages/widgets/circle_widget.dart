@@ -31,18 +31,40 @@ class _ContainerWidgetState extends State<CircleWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
+  bool? isWarning;
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 2000));
+
+    animationCustom();
+    checkWarning();
+  }
+
+  @override
+  void didUpdateWidget(covariant CircleWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    animationCustom();
+    checkWarning();
+  }
+
+  void animationCustom() {
     _animation =
         Tween<double>(begin: 0, end: widget.value).animate(_animationController)
           ..addListener(() {
             setState(() {});
           });
     _animationController.forward();
+  }
+
+  void checkWarning() {
+    if (widget.value! > widget.warningValue!) {
+      isWarning = true;
+    } else {
+      isWarning = false;
+    }
   }
 
   @override
@@ -58,7 +80,7 @@ class _ContainerWidgetState extends State<CircleWidget>
                     scale: 1.4),
               ),
               child: CustomPaint(
-                foregroundPainter: CircleProgress(_animation.value),
+                foregroundPainter: CircleProgress(_animation.value, isWarning!),
                 child: Center(
                     child: Text(
                   "${_animation.value.toInt()} ${widget.unit}",

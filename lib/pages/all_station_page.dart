@@ -15,6 +15,7 @@ class AllStationPage extends StatefulWidget {
 
 class _AllStationPageState extends State<AllStationPage> {
   final stationData = StationData();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,9 +76,6 @@ class _AllStationPageState extends State<AllStationPage> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => StationScreen(
-                                            dataStation:
-                                                station[index].dataStation,
-                                            warning: station[index].warning,
                                             stationName: station[index].name,
                                           ),
                                         ),

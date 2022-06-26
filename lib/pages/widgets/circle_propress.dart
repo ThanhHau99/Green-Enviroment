@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 class CircleProgress extends CustomPainter {
   final strokeCircle = 15.0;
   double currentProgress;
-  CircleProgress(this.currentProgress);
+  bool isWarning;
+  CircleProgress(this.currentProgress, this.isWarning);
   @override
   void paint(Canvas canvas, Size size) {
     // draw circle
@@ -23,7 +24,7 @@ class CircleProgress extends CustomPainter {
     // draw animation
     Paint animationArc = Paint()
       ..strokeWidth = strokeCircle
-      ..color = AppColors.lightGreen
+      ..color = isWarning ? AppColors.red : AppColors.lightGreen
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
@@ -39,7 +40,7 @@ class CircleProgress extends CustomPainter {
     // background
     Paint backgroundStroke = Paint()
       ..strokeWidth = 2
-      ..color = AppColors.lightGreen
+      ..color = isWarning ? AppColors.red : AppColors.lightGreen
       ..style = PaintingStyle.stroke;
 
     canvas.drawCircle(center, 100, backgroundStroke);
