@@ -2,7 +2,7 @@ import 'package:envapp/share/app_colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import 'pages/all_station_page.dart';
+import 'pages/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
           secondary: AppColors.lightGreen,
         ),
       ),
-      home: const AllStationPage(),
+      home: const SplashScreen(),
     );
   }
 }

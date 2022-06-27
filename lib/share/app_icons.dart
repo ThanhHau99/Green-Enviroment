@@ -16,4 +16,8 @@ class AppIcons {
   static String close = "${route}close.png";
   static String inactive = "${route}inactive.png";
   static String exclamation = "${route}exclamation.png";
+  static String logo = "${route}logo.png";
+  static String logoTH = "${route}logo_TH.png";
+  static String logoTHColor = "${route}logo_TH_color.png";
+  static String logoTDTU = "${route}logo_TDTU.png";
 }
