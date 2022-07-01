@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'EnvApp',
+      title: 'Green Environment',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Agency',

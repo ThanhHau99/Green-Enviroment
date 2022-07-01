@@ -38,7 +38,7 @@ class _StationScreenState extends State<StationScreen> {
     loadData();
   }
 
-  void loadData() async {
+  Future<void> loadData() async {
     final data = stationData.loadStationData(widget.stationName.toString());
 
     await data.then((value) {
@@ -156,11 +156,9 @@ class _StationScreenState extends State<StationScreen> {
 
   Future<void> _onRefresh() async {
     print("_onRefresh");
-    await Future.delayed(const Duration(milliseconds: 3000));
     tabWidgets = [];
     tabBarViewWidgets = [];
-
-    loadData();
+    await loadData();
   }
 
   @override
