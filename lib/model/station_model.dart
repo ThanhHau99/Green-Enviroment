@@ -1,30 +1,25 @@
 class StationModel {
-  String? id;
-  String? name;
+  String? stationID;
   bool? isActive;
   dynamic stationData;
 
   StationModel({
-    this.id,
-    this.name,
+    this.stationID,
     this.isActive,
     this.stationData,
   });
 
   StationModel.fromJson(Map<dynamic, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
+    stationID = json['stationID'];
     isActive = json['isActive'];
     stationData = json['stationData'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = id;
-    data['name'] = name;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['stationID'] = stationID;
     data['isActive'] = isActive;
     data['stationData'] = stationData;
-
     return data;
   }
 }

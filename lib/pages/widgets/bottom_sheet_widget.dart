@@ -1,25 +1,21 @@
-import 'package:envapp/pages/station_screen.dart';
-import 'package:envapp/share/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-
+import 'widgets.dart';
 import '../../data/station_data.dart';
-import '../../share/app_colors.dart';
-import 'alert_dialog_widget.dart';
-import 'custom_button.dart';
+import '../../share/share.dart';
 
 class BottomSheetWidget extends StatelessWidget {
   BottomSheetWidget({
     Key? key,
     this.title,
     this.warningValue,
-    this.stationName,
+    this.stationID,
     this.warningName,
   }) : super(key: key);
 
   final String? title;
   final double? warningValue;
-  final String? stationName;
+  final String? stationID;
   final String? warningName;
 
   final TextEditingController _controller = TextEditingController();
@@ -99,8 +95,10 @@ class BottomSheetWidget extends StatelessWidget {
               lableColor: AppColors.lightGreen,
               gradient: AppColors.whiteGradient,
               onTap: () {
-                Navigator.pop(context, 'text');
-                updateValue(context);
+                if (_controller.value.text.isNotEmpty) {
+                  Navigator.pop(context);
+                  updateValue(context);
+                }
               },
             ),
           ],
@@ -113,7 +111,7 @@ class BottomSheetWidget extends StatelessWidget {
     bool result = await InternetConnectionChecker().hasConnection;
     if (result) {
       double value = double.parse(_controller.value.text).toDouble();
-      stationData.updateWarningValue(stationName!, warningName!, value);
+      stationData.updateWarningValue(stationID!, warningName!, value);
     }
     showDialog<String>(
       barrierDismissible: false,

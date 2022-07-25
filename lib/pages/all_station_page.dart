@@ -1,10 +1,9 @@
-import 'package:envapp/data/station_data.dart';
-import 'package:envapp/pages/station_screen.dart';
-import 'package:envapp/share/app_colors.dart';
-import 'package:envapp/share/app_icons.dart';
 import 'package:flutter/material.dart';
+import 'station_screen.dart';
+import 'widgets/widgets.dart';
+import '../data/station_data.dart';
 import '../model/station_model.dart';
-import 'widgets/alert_dialog_widget.dart';
+import '../share/share.dart';
 
 class AllStationPage extends StatefulWidget {
   const AllStationPage({Key? key}) : super(key: key);
@@ -63,47 +62,66 @@ class _AllStationPageState extends State<AllStationPage> {
                           );
                         }
                         final station = snapshot.data;
-                        return GridView.builder(
-                          itemCount: station!.length,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                          ),
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                if (station[index].isActive!) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => StationScreen(
-                                        stationName: station[index].name,
+                        return station!.isEmpty
+                            ? SingleChildScrollView(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                child: SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height - 100,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Center(
+                                    child: Text(
+                                      "There aren't any Station!",
+                                      style: TextStyle(
+                                        fontSize: 23,
+                                        color: AppColors.hintText,
                                       ),
                                     ),
-                                  );
-                                } else {
-                                  showDialog<String>(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        AlertDialogWidget(
-                                      title: "Alert",
-                                      text:
-                                          "${station[index].name} isn't active",
-                                      enableIcon: false,
+                                  ),
+                                ),
+                              )
+                            : GridView.builder(
+                                itemCount: station.length,
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 10,
+                                  mainAxisSpacing: 10,
+                                ),
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      if (station[index].isActive!) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => StationScreen(
+                                              stationID:
+                                                  station[index].stationID,
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        showDialog<String>(
+                                          barrierDismissible: false,
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertDialogWidget(
+                                            title: "Alert",
+                                            text:
+                                                "${station[index].stationID} isn't active",
+                                            enableIcon: false,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: CustomContainer(
+                                      title: station[index].stationID,
+                                      isActive: station[index].isActive,
                                     ),
                                   );
-                                }
-                              },
-                              child: CustomContainer(
-                                title: station[index].name,
-                                isActive: station[index].isActive,
-                              ),
-                            );
-                          },
-                        );
+                                },
+                              );
                       }),
                 ),
               ),

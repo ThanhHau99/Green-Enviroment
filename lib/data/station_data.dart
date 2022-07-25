@@ -1,14 +1,10 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:envapp/model/station_model.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/services.dart';
 
 abstract class RealtimeData {
   Future<List<StationModel>> load();
-  Future<Map> loadStationData(String stationName);
-  Future<void> updateWarningValue(String stationName, String key, double value);
+  Future<Map> loadStationData(String stationID);
+  Future<void> updateWarningValue(String stationID, String key, double value);
 }
 
 class StationData extends RealtimeData {
@@ -29,22 +25,20 @@ class StationData extends RealtimeData {
   }
 
   @override
-  Future<Map> loadStationData(String stationName) async {
+  Future<Map> loadStationData(String stationID) async {
     DatabaseReference ref =
-        FirebaseDatabase.instance.ref("$stationName/stationData");
+        FirebaseDatabase.instance.ref("$stationID/stationData");
     // Get the data once
     DatabaseEvent event = await ref.once();
     final value = event.snapshot.value as Map<dynamic, dynamic>;
-
-    print("test");
     return value;
   }
 
   @override
   Future<void> updateWarningValue(
-      String stationName, String key, double value) async {
+      String stationID, String key, double value) async {
     DatabaseReference ref =
-        FirebaseDatabase.instance.ref("$stationName/stationData/warning");
+        FirebaseDatabase.instance.ref("$stationID/stationData/warning");
     await ref.update({
       key: value,
     });

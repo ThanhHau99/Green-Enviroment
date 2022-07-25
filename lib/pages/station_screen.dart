@@ -1,17 +1,12 @@
-import 'package:envapp/pages/widgets/tab_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'widgets/widgets.dart';
 import '../data/station_data.dart';
-import '../share/app_colors.dart';
-import '../share/app_icons.dart';
-import 'widgets/circle_widget.dart';
-import 'widgets/header_widget.dart';
-import 'widgets/progress_bar.dart';
-import 'widgets/wave_widget.dart';
+import '../share/share.dart';
 
 class StationScreen extends StatefulWidget {
-  final String? stationName;
-  const StationScreen({Key? key, this.stationName}) : super(key: key);
+  final String? stationID;
+  const StationScreen({Key? key, this.stationID}) : super(key: key);
 
   @override
   State<StationScreen> createState() => _StationScreenState();
@@ -25,11 +20,11 @@ class _StationScreenState extends State<StationScreen> {
   List<Widget> tabWidgets = [];
   List<Widget> tabBarViewWidgets = [];
   String? dateTime;
-  double? tempWarning = 0;
-  double? humiWarning = 0;
-  double? dustWarning = 0;
-  double? waterLevelWarning = 0;
-  double? pHWarning = 0;
+  dynamic tempWarning = 0;
+  dynamic humiWarning = 0;
+  dynamic dustWarning = 0;
+  dynamic waterLevelWarning = 0;
+  dynamic pHWarning = 0;
   @override
   void initState() {
     super.initState();
@@ -39,7 +34,7 @@ class _StationScreenState extends State<StationScreen> {
   }
 
   Future<void> loadData() async {
-    final data = stationData.loadStationData(widget.stationName.toString());
+    final data = stationData.loadStationData(widget.stationID.toString());
 
     await data.then((value) {
       value.forEach((key, value) {
@@ -83,11 +78,12 @@ class _StationScreenState extends State<StationScreen> {
         scale: 2,
       ));
       tabBarViewWidgets.add(CircleWidget(
-        value: value,
+        value: (value is double) ? value : value.toDouble(),
         unit: "°C",
-        warningValue: tempWarning,
-        lableButton: "Set Temperature alert",
-        stationName: widget.stationName,
+        warningValue:
+            (tempWarning is double) ? tempWarning : tempWarning!.toDouble(),
+        sensorName: "Temperature",
+        stationID: widget.stationID,
         warningName: "tempWarning",
       ));
     } else if (key == "humi") {
@@ -99,11 +95,12 @@ class _StationScreenState extends State<StationScreen> {
         scale: 1.5,
       ));
       tabBarViewWidgets.add(CircleWidget(
-        value: value,
+        value: (value is double) ? value : value.toDouble(),
         unit: "%",
-        warningValue: humiWarning,
-        lableButton: "Set Humidity alert",
-        stationName: widget.stationName,
+        warningValue:
+            (humiWarning is double) ? humiWarning : humiWarning!.toDouble(),
+        sensorName: "Humidity",
+        stationID: widget.stationID,
         warningName: "humiWarning",
       ));
     } else if (key == "dust") {
@@ -115,11 +112,12 @@ class _StationScreenState extends State<StationScreen> {
         scale: 1.5,
       ));
       tabBarViewWidgets.add(CircleWidget(
-        value: value,
+        value: (value is double) ? value : value.toDouble(),
         unit: "mcg/m3",
-        warningValue: dustWarning,
-        lableButton: "Set Dust alert",
-        stationName: widget.stationName,
+        warningValue:
+            (dustWarning is double) ? dustWarning : dustWarning!.toDouble(),
+        sensorName: "Dust",
+        stationID: widget.stationID,
         warningName: "dustWarning",
       ));
     } else if (key == "waterLevel") {
@@ -132,10 +130,13 @@ class _StationScreenState extends State<StationScreen> {
         iconMargin: const EdgeInsets.only(top: 10, bottom: 20),
       ));
       tabBarViewWidgets.add(WaveWidget(
-        value: value,
-        warningValue: waterLevelWarning,
-        stationName: widget.stationName,
+        value: (value is double) ? value : value.toDouble(),
+        warningValue: (waterLevelWarning is double)
+            ? waterLevelWarning
+            : waterLevelWarning!.toDouble(),
+        stationID: widget.stationID,
         warningName: "waterLevelWarning",
+        sensorName: "Water level",
       ));
     } else if (key == "pH") {
       tabWidgets.add(TabWidget(
@@ -146,10 +147,11 @@ class _StationScreenState extends State<StationScreen> {
         scale: 1.5,
       ));
       tabBarViewWidgets.add(ProgressBar(
-        value: value,
-        warningValue: pHWarning,
-        stationName: widget.stationName,
+        value: (value is double) ? value : value.toDouble(),
+        warningValue: (pHWarning is double) ? pHWarning : pHWarning!.toDouble(),
+        stationID: widget.stationID,
         warningName: "pHWarning",
+        sensorName: "pH",
       ));
     }
   }
@@ -180,7 +182,7 @@ class _StationScreenState extends State<StationScreen> {
                 child: Column(
                   children: [
                     HeaderWidget(
-                      title: widget.stationName,
+                      title: widget.stationID,
                     ),
                     const SizedBox(
                       height: 10,

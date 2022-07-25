@@ -40,6 +40,7 @@ dependencies:
   firebase_database: ^9.0.16
   intl: ^0.17.0
   internet_connection_checker: ^0.0.1+4
+  top_snackbar_flutter: ^2.1.1
 
 dev_dependencies:
   flutter_test:

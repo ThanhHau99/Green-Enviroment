@@ -1,7 +1,6 @@
-import 'package:envapp/pages/widgets/custom_button.dart';
-import 'package:envapp/share/app_colors.dart';
-import 'package:envapp/share/app_icons.dart';
 import 'package:flutter/material.dart';
+import 'widgets.dart';
+import '../../share/share.dart';
 
 class AlertDialogWidget extends StatelessWidget {
   const AlertDialogWidget({

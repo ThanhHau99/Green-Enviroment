@@ -1,7 +1,6 @@
-import 'package:envapp/pages/all_station_page.dart';
-import 'package:envapp/share/app_colors.dart';
-import 'package:envapp/share/app_icons.dart';
 import 'package:flutter/material.dart';
+import 'all_station_page.dart';
+import '../share/share.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
